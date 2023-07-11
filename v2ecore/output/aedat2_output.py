@@ -63,6 +63,19 @@ class AEDat2Output:
             self.sizey = output_height
             self.flipy = True  # v2e uses computer vision matrix printing convention of UL pixel being 0,0, but jAER uses original graphics and graphing convention that 0,0 is LL
             self.flipx = True # not 100% sure why this is needed. Observed for tennis example
+        elif output_width==1280 and output_height==720:
+            # PROPHESEE EVK4
+            # In the 32-bit address:
+            # bit 32 (1-based) being 1 indicates an APS sample
+            # bit 11 (1-based) being 1 indicates a special event
+            # bits 11 and 32 (1-based) both being zero signals a polarity event
+            self.yShiftBits = 22
+            self.xShiftBits = 12
+            self.polShiftBits = 11  # see https://gitlab.com/inivation/inivation-docs/-/blob/master/Software%20user%20guides/AEDAT_file_formats.md#dvs-or-aps
+            self.sizex = output_width
+            self.sizey = output_height
+            self.flipy = True  # v2e uses computer vision matrix printing convention of UL pixel being 0,0, but jAER uses original graphics and graphing convention that 0,0 is LL
+            self.flipx = True # not 100% sure why this is needed. Observed for tennis example
         else:
             raise ValueError(f'AEDAT-2.0 output width={output_width} height={output_height} not supported; add your camera to {__name__} or use one of the predefined DVS cameras, e.g. --dvs346 or --dvs240 that have sizes {self.SUPPORTED_SIZES}')
 

@@ -150,7 +150,7 @@ def main():
     output_width, output_height = set_output_dimension(
         args.output_width, args.output_height,
         args.dvs128, args.dvs240, args.dvs346,
-        args.dvs640, args.dvs1024,
+        args.dvs640, args.dvs1024,args.evk4,
         logger)
 
     # Visualization
@@ -357,12 +357,18 @@ def main():
         if cap is not None:
             # set the output width and height from first image in folder, but only if they were not already set
             set_size = False
-            if output_height is None and hasattr(cap,'frame_height'):
+            if output_height is None and cap.get(cv2.CAP_PROP_FRAME_HEIGHT):
                 set_size = True
-                output_height = cap.frame_height
-            if output_width is None and hasattr(cap,'frame_width'):
+                output_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            if output_width is None and cap.get(cv2.CAP_PROP_FRAME_WIDTH):
                 set_size = True
-                output_width = cap.frame_width
+                output_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+            # if output_height is None and hasattr(cap,'frame_height'):
+            #     set_size = True
+            #     output_height = cap.frame_height
+            # if output_width is None and hasattr(cap,'frame_width'):
+            #     set_size = True
+            #     output_width = cap.frame_width
             if set_size:
                 logger.warning(
                     f'From input frame automatically set DVS output_width={output_width} and/or output_height={output_height}. '

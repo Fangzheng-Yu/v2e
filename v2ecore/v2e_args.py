@@ -78,8 +78,11 @@ def v2e_args(parser):
 
     # general arguments for output folder, overwriting, etc
     outGroupGeneral = parser.add_argument_group('Output: General')
+    # outGroupGeneral.add_argument(
+    #     "-o", "--output_folder", type=expandpath, default='v2e-output',
+    #     help="folder to store outputs.")
     outGroupGeneral.add_argument(
-        "-o", "--output_folder", type=expandpath, default='v2e-output',
+        "-o", "--output_folder", type=expandpath, default='output/tennis',
         help="folder to store outputs.")
     outGroupGeneral.add_argument(
         "--avi_frame_rate", type=int, default=30,
@@ -111,7 +114,7 @@ def v2e_args(parser):
     timestampResolutionGroup = parser.add_argument_group(
         'DVS timestamp resolution')
     timestampResolutionGroup.add_argument(
-        "--auto_timestamp_resolution", default=True, type=str2bool,
+        "--auto_timestamp_resolution", default=False, type=str2bool,
         const=True, nargs='?',
         help="(Ignored by --disable_slomo or --synthetic_input.) "
              "\nIf True (default), upsampling_factor is automatically "
@@ -121,7 +124,7 @@ def v2e_args(parser):
              "\nCan be combined with --timestamp_resolution to "
              "ensure DVS events have at most some resolution.")
     timestampResolutionGroup.add_argument(
-        "--timestamp_resolution", type=float,
+        "--timestamp_resolution", type=float, default=.003,
         help="(Ignored by --disable_slomo or --synthetic_input.) "
              "Desired DVS timestamp resolution in seconds; "
              "determines slow motion upsampling factor;  "
@@ -220,12 +223,12 @@ def v2e_args(parser):
     camGroup = parser.add_argument_group(
         'DVS camera sizes (selecting --dvs346, --dvs640, etc. overrides --output_width and --output_height')
     camGroup.add_argument(
-        "--output_height", type=int, default=None,
+        "--output_height", type=int, default=260,
         help="Height of output DVS data in pixels. "
              "If None, same as input video. "
              "Use --output_height=260 for Davis346.")
     camGroup.add_argument(
-        "--output_width", type=int, default=None,
+        "--output_width", type=int, default=346,
         help="Width of output DVS data in pixels. "
              "If None, same as input video. "
              "Use --output_width=346 for Davis346.")
@@ -246,6 +249,9 @@ def v2e_args(parser):
     camAction.add_argument(
         '--dvs1024', action='store_true',
         help='Set size for 1024x768 DVS')
+    camAction.add_argument(
+        '--evk4', action='store_true',
+        help='Set size for 1280x720 DVS')
 
     # slow motion frame synthesis
     sloMoGroup = parser.add_argument_group(
@@ -290,7 +296,7 @@ def v2e_args(parser):
     # input file handling
     inGroup = parser.add_argument_group('Input file handling')
     inGroup.add_argument(
-        "-i", "--input", type=expandpath,
+        "-i", "--input", type=expandpath, default='input/tennis.mov',
         help="Input video file or a image folder; "
              "leave empty for file chooser dialog."
              "If the input is a folder, the folder should contain "
@@ -327,7 +333,7 @@ def v2e_args(parser):
         help="Start at this time in seconds in video. "
              "Use None to start at beginning of source video.")
     inGroup.add_argument(
-        "--stop_time", type=float, default=None,
+        "--stop_time", type=float, default=3, # default=None,
         help="Stop at this time in seconds in video. "
              "Use None to end at end of source video.")
     inGroup.add_argument(
@@ -380,7 +386,7 @@ def v2e_args(parser):
         help="Set full scale event count histogram count for DVS videos "
              "to be this many ON or OFF events for full white or black.")
     outGroupDvsVideo.add_argument(
-        "--no_preview", action="store_true",
+        "--no_preview", action="store_true",default=True,
         help="disable preview in cv2 windows for faster processing.")
     # outGroupDvsVideo.add_argument(
     #     "--frame_rate", type=float,
@@ -399,7 +405,7 @@ def v2e_args(parser):
         "--dvs_h5", type=output_file_check, default=None,
         help="Output DVS events as hdf5 event database.")
     dvsEventOutputGroup.add_argument(
-        "--dvs_aedat2", type=output_file_check, default='v2e-dvs-events.aedat',
+        "--dvs_aedat2", type=output_file_check, default='tennis.aedat', # default='v2e-dvs-events.aedat',
         help="Output DVS events as DAVIS346 camera AEDAT-2.0 event file "
              "for jAER; one file for real and one file for v2e events. To suppress, supply argument None. ")
     dvsEventOutputGroup.add_argument(
