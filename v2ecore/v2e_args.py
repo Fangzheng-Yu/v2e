@@ -161,7 +161,7 @@ def v2e_args(parser):
         help="1-std deviation threshold variation in log_e intensity change.")
 
     modelGroup.add_argument(
-        "--cutoff_hz", type=float, default=300,
+        "--cutoff_hz", type=float, default=0,
         help="photoreceptor IIR lowpass filter "
              "cutoff-off 3dB frequency in Hz - "
              "see https://ieeexplore.ieee.org/document/4444573."
@@ -223,12 +223,12 @@ def v2e_args(parser):
     camGroup = parser.add_argument_group(
         'DVS camera sizes (selecting --dvs346, --dvs640, etc. overrides --output_width and --output_height')
     camGroup.add_argument(
-        "--output_height", type=int, default=260,
+        "--output_height", type=int, default=720,
         help="Height of output DVS data in pixels. "
              "If None, same as input video. "
              "Use --output_height=260 for Davis346.")
     camGroup.add_argument(
-        "--output_width", type=int, default=346,
+        "--output_width", type=int, default=1280,
         help="Width of output DVS data in pixels. "
              "If None, same as input video. "
              "Use --output_width=346 for Davis346.")
@@ -272,13 +272,13 @@ def v2e_args(parser):
              "Batch size 8-16 is recommended if your GPU "
              "has sufficient memory.")
     sloMoGroup.add_argument(
-        "--vid_orig", type=none_or_str, default="video_orig.avi",
+        "--vid_orig", type=none_or_str, default=None, # default="video_orig.avi",
         help="Output src video at same rate as slomo video "
              "(with duplicated frames). "
              "Specify emtpy string or 'None' to skip output.")
 
     sloMoGroup.add_argument(
-        "--vid_slomo", type=none_or_str, default="video_slomo.avi",
+        "--vid_slomo", type=none_or_str, default=None, # default="video_slomo.avi",
         help="Output slomo of src video slowed down by slowdown_factor."
              "Specify emtpy string or 'None' to skip output.")
 
@@ -379,7 +379,7 @@ def v2e_args(parser):
              "\n\t\t-dvs_exposure area_count 500 64"
              "\n\tsource: each DVS frame is from one source frame (slomo or original, depending on if slomo is used)")
     outGroupDvsVideo.add_argument(
-        "--dvs_vid", type=none_or_str, default="dvs-video.avi",
+        "--dvs_vid", type=none_or_str, default=None, # default="dvs-video.avi",
         help="Output DVS events as AVI video at frame_rate. To suppress, supply empty argument or 'None'.")
     outGroupDvsVideo.add_argument(
         "--dvs_vid_full_scale", type=int, default=2,
@@ -402,10 +402,10 @@ def v2e_args(parser):
         help="Save frames, frame timestamp and corresponding event index"
              " in HDF5 format used for DDD17 and DDD20 datasets. Default is False.")
     dvsEventOutputGroup.add_argument(
-        "--dvs_h5", type=output_file_check, default=None,
+        "--dvs_h5", type=output_file_check, default='dvs_tennis_h5',
         help="Output DVS events as hdf5 event database.")
     dvsEventOutputGroup.add_argument(
-        "--dvs_aedat2", type=output_file_check, default='tennis.aedat', # default='v2e-dvs-events.aedat',
+        "--dvs_aedat2", type=output_file_check, default=None, # default='v2e-dvs-events.aedat',
         help="Output DVS events as DAVIS346 camera AEDAT-2.0 event file "
              "for jAER; one file for real and one file for v2e events. To suppress, supply argument None. ")
     dvsEventOutputGroup.add_argument(

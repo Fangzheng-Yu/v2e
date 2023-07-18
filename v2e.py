@@ -767,7 +767,7 @@ def main():
                     if cutoff_hz > 0:
                         logger.info('Using auto_timestamp_resolution. '
                                        'checking if cutoff hz is ok given '
-                                       'samplee rate {}'.format(1/avgTs))
+                                       'sample rate {}'.format(1/avgTs))
                         check_lowpass(cutoff_hz, 1/avgTs, logger)
 
                     # read back to memory
