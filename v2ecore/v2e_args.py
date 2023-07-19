@@ -149,15 +149,15 @@ def v2e_args(parser):
              "DVS parameters. To use custom DVS paramters, "
              "use None here.")
     modelGroup.add_argument(
-        "--pos_thres", type=float, default=0.2,
+        "--pos_thres", type=float, default=0.25,
         help="threshold in log_e intensity change to "
              "trigger a positive event.")
     modelGroup.add_argument(
-        "--neg_thres", type=float, default=0.2,
+        "--neg_thres", type=float, default=0.25,
         help="threshold in log_e intensity change to "
              "trigger a negative event.")
     modelGroup.add_argument(
-        "--sigma_thres", type=float, default=0.03,
+        "--sigma_thres", type=float, default=0.06,
         help="1-std deviation threshold variation in log_e intensity change.")
 
     modelGroup.add_argument(
@@ -175,7 +175,7 @@ def v2e_args(parser):
         help="leak event rate per pixel in Hz - "
              "see https://ieeexplore.ieee.org/abstract/document/7962235")
     modelGroup.add_argument(
-        "--shot_noise_rate_hz", type=float, default=0.001,
+        "--shot_noise_rate_hz", type=float, default=0.1,
         # default for good lighting, very low rate
         help="Temporal noise rate of ON+OFF events in "
              "darkest parts of scene; reduced in brightest parts. ")
