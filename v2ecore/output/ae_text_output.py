@@ -100,6 +100,7 @@ class DVSTextOutput:
                 self.file.write('{} {} {} {} {}\n'.format(t[i], x[i], y[i], p[i], int(signnoise_label[i]))) # write with additonal signal/noise label column cast to int (1=signal, 0=noise)
         self.numEventsWritten += n
 
+
 # class DVSTextOutputTest: # test from src.output.ae_text_output import DVSTextOutputTest
 #     f = DVSTextOutput('aedat-text-test.txt')
 #     e = [[0., 0, 0, 0], [1e-6, 0, 0, 1], [2e-6, 1, 0, 0]]

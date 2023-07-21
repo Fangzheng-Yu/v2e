@@ -30,6 +30,41 @@ from v2ecore.v2e_utils import checkAddSuffix, v2e_quit, video_writer
 
 logger = logging.getLogger(__name__)
 
+def evs_show(frame):
+    vis_event = np.ones((frame.shape[0],frame.shape[1],3),dtype = np.uint8)*255
+    vis_event_B = vis_event[:,:,0]
+    vis_event_G = vis_event[:,:,1]
+    vis_event_R = vis_event[:,:,2]
+    vis_event_B[frame>0] = 255
+    vis_event_R[frame>0] = 0
+    vis_event_G[frame>0] = 0
+    vis_event_R[frame<0] = 255
+    vis_event_G[frame<0] = 0
+    vis_event_B[frame<0] = 0
+    vis_event[:,:,0] = vis_event_B
+    vis_event[:,:,1] = vis_event_G
+    vis_event[:,:,2] = vis_event_R
+    return vis_event
+def events_to_bgr(events,imgH,imgW):
+    image = np.ones((imgH,imgW,3),dtype = np.uint8)*255
+    t = events[0,0]
+    for element in events:
+        if(t != element[0]):
+            print("error,events_to_image%0.8f!=%0.8f"%(t,element[0]))
+        x = element[1].astype(np.int32)
+        y = element[2].astype(np.int32)
+        polarity = element[3].astype(np.int32)
+        #print("%0.8f: %d %d ,%d",element[0],x,y,polarity)
+        if(polarity == 1):
+            image[y,x,0] = 0
+            image[y,x,1] = 0
+            image[y,x,2] = 255
+        if(polarity == -1):
+            image[y,x,0] = 255
+            image[y,x,1] = 0
+            image[y,x,2] = 0
+    return image
+
 
 class EventEmulator(object):
     """compute events based on the input frame.
@@ -99,6 +134,7 @@ class EventEmulator(object):
             dvs_h5: str = None,
             dvs_aedat2: str = None,
             dvs_text: str = None,
+            dvs_img:bool = False,
             # change as you like to see 'baseLogFrame',
             # 'lpLogFrame', 'diff_frame'
             show_dvs_model_state: str = None,
@@ -231,6 +267,7 @@ class EventEmulator(object):
         # aedat or text output
         self.dvs_aedat2 = dvs_aedat2
         self.dvs_text = dvs_text
+        self.dvs_img = dvs_img
 
         # event stats
         self.num_events_total = 0
@@ -951,6 +988,15 @@ class EventEmulator(object):
                     self.dvs_text.appendEvents(events, signnoise_label=signnoise_label)
                 else:
                     self.dvs_text.appendEvents(events)
+            if self.dvs_img is True:
+                print(events)
+                timestamp = "%0.8f"%(events[0,0])
+                print(timestamp)
+                filename = os.path.join(self.output_folder,timestamp+".png")
+                imgW = self.new_frame.shape[1]
+                imgH = self.new_frame.shape[0]
+                image = events_to_bgr(events,imgH,imgW)
+                cv2.imwrite(filename,image)
 
         if self.frame_ev_idx_dataset is not None:
             # save frame event idx
